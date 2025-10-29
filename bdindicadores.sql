@@ -69,7 +69,6 @@ CREATE TABLE Proyecto (
     FechaModificacion DATE NULL,
     FechaFinalizacion DATE NULL,
     RutaLogo NVARCHAR(MAX) NULL,
-    CONSTRAINT FK_Proyecto_ProyectoPadre FOREIGN KEY (IdProyectoPadre) REFERENCES Proyecto(Id) ON DELETE NO ACTION,
     CONSTRAINT FK_Proyecto_Responsable FOREIGN KEY (IdResponsable) REFERENCES Responsable(Id),
     CONSTRAINT FK_Proyecto_TipoProyecto FOREIGN KEY (IdTipoProyecto) REFERENCES TipoProyecto(Id)
 );
@@ -112,7 +111,7 @@ CREATE TABLE Producto (
 );
 
 -- ===========================================
--- Tabla: Proyecto_Producto (relación N:M)
+-- Tabla: Proyecto_Producto (relaciï¿½n N:M)
 -- ===========================================
 CREATE TABLE Proyecto_Producto (
     IdProyecto INT NOT NULL,
@@ -138,7 +137,7 @@ CREATE TABLE Entregable (
 );
 
 -- ===========================================
--- Tabla: Producto_Entregable (relación N:M)
+-- Tabla: Producto_Entregable (relaciï¿½n N:M)
 -- ===========================================
 CREATE TABLE Producto_Entregable (
     IdProducto INT NOT NULL,
@@ -150,7 +149,7 @@ CREATE TABLE Producto_Entregable (
 );
 
 -- ===========================================
--- Tabla: Responsable_Entregable (relación N:M)
+-- Tabla: Responsable_Entregable (relaciï¿½n N:M)
 -- ===========================================
 CREATE TABLE Responsable_Entregable (
     IdResponsable INT NOT NULL,
@@ -175,7 +174,7 @@ CREATE TABLE Archivo (
 );
 
 -- ===========================================
--- Tabla: Archivo_Entregable (relación N:M)
+-- Tabla: Archivo_Entregable (relaciï¿½n N:M)
 -- ===========================================
 CREATE TABLE Archivo_Entregable (
     IdArchivo INT NOT NULL,
@@ -275,7 +274,7 @@ CREATE TABLE MetaEstrategica (
 );
 
 -- ===========================================
--- Tabla: Meta_Proyecto (relación N:M)
+-- Tabla: Meta_Proyecto (relaciï¿½n N:M)
 -- ===========================================
 CREATE TABLE Meta_Proyecto (
     IdMeta INT NOT NULL,
@@ -291,36 +290,36 @@ INSERT INTO TipoProyecto (Nombre, Descripcion) VALUES
 ('Operativo', 'Proyectos enfocados en la mejora o mantenimiento de procesos internos');
 
 INSERT INTO TipoProyecto (Nombre, Descripcion) VALUES
-('Innovación', 'Proyectos que introducen nuevas soluciones, productos o tecnologías');
+('Innovaciï¿½n', 'Proyectos que introducen nuevas soluciones, productos o tecnologï¿½as');
 
 INSERT INTO TipoProyecto (Nombre, Descripcion) VALUES
-('Investigación', 'Proyectos para la generación de conocimiento o desarrollo experimental');
+('Investigaciï¿½n', 'Proyectos para la generaciï¿½n de conocimiento o desarrollo experimental');
 
 
 INSERT INTO TipoResponsable (Titulo, Descripcion) VALUES
-('Gerente de Proyecto', 'Responsable principal de la planificación, ejecución y cierre de un proyecto.');
+('Gerente de Proyecto', 'Responsable principal de la planificaciï¿½n, ejecuciï¿½n y cierre de un proyecto.');
 
 INSERT INTO TipoResponsable (Titulo, Descripcion) VALUES
-('Líder de Microproyecto', 'Responsable de la gestión y coordinación de una tarea o componente específico dentro de un proyecto más grande.');
+('Lï¿½der de Microproyecto', 'Responsable de la gestiï¿½n y coordinaciï¿½n de una tarea o componente especï¿½fico dentro de un proyecto mï¿½s grande.');
 
 INSERT INTO TipoResponsable (Titulo, Descripcion) VALUES
 ('Miembro del Equipo', 'Responsable de ejecutar las tareas asignadas y contribuir al logro de los objetivos del proyecto.');
 
 INSERT INTO Entregable (Codigo, Titulo, Descripcion, FechaInicio, FechaFinPrevista) VALUES
-('E-001', 'Módulo de Integración de Datos', 'Submódulo que conecta los sistemas académicos', '2025-03-20', '2025-06-30');
+('E-001', 'Mï¿½dulo de Integraciï¿½n de Datos', 'Submï¿½dulo que conecta los sistemas acadï¿½micos', '2025-03-20', '2025-06-30');
 
 
 INSERT INTO VariableEstrategica (Titulo) VALUES
-('Innovación');
+('Innovaciï¿½n');
 
 -- Tres registros adicionales
 INSERT INTO VariableEstrategica (Titulo, Descripcion) VALUES
-('Sostenibilidad Financiera', 'Asegurar la viabilidad económica a largo plazo de los proyectos e iniciativas.'),
-('Eficiencia Operacional', 'Mejorar los procesos internos para reducir costos y tiempos de ejecución.'),
-('Experiencia del Cliente/Usuario', 'Foco en optimizar la interacción y satisfacción de los usuarios con nuestros servicios o productos.');
+('Sostenibilidad Financiera', 'Asegurar la viabilidad econï¿½mica a largo plazo de los proyectos e iniciativas.'),
+('Eficiencia Operacional', 'Mejorar los procesos internos para reducir costos y tiempos de ejecuciï¿½n.'),
+('Experiencia del Cliente/Usuario', 'Foco en optimizar la interacciï¿½n y satisfacciï¿½n de los usuarios con nuestros servicios o productos.');
 
 INSERT INTO Estado (Nombre, Descripcion) VALUES
-('En ejecución', 'El proyecto, tarea o elemento se encuentra activo y progresando.'),
+('En ejecuciï¿½n', 'El proyecto, tarea o elemento se encuentra activo y progresando.'),
 ('Finalizado', 'El proyecto, tarea o elemento ha sido completado y cerrado exitosamente.');
 
 -- Sentencias INSERT para la tabla Usuario
@@ -335,10 +334,16 @@ INSERT INTO Usuario (Email, Contrasena, Activo) VALUES
 
 -- Sentencias INSERT para la tabla TipoProducto
 INSERT INTO TipoProducto (Nombre, Descripcion) VALUES
-('Software a Medida', 'Desarrollo de aplicaciones y sistemas diseñados específicamente para las necesidades del cliente.'),
-('Consultoría Técnica', 'Servicios de asesoramiento especializado en arquitectura, implementación o mejora de sistemas.'),
-('Infraestructura Cloud', 'Implementación y gestión de recursos y servicios en plataformas de nube pública o privada.');
+('Software a Medida', 'Desarrollo de aplicaciones y sistemas diseï¿½ados especï¿½ficamente para las necesidades del cliente.'),
+('Consultorï¿½a Tï¿½cnica', 'Servicios de asesoramiento especializado en arquitectura, implementaciï¿½n o mejora de sistemas.'),
+('Infraestructura Cloud', 'Implementaciï¿½n y gestiï¿½n de recursos y servicios en plataformas de nube pï¿½blica o privada.');
 
 -- Sentencia INSERT para la tabla Entregable
 INSERT INTO Entregable (Codigo, Titulo, Descripcion, FechaInicio, FechaFinPrevista) VALUES
-('E-001', 'Módulo de Integración de Datos', 'Submódulo que conecta los sistemas académicos', '2025-03-20', '2025-06-30');
+('E-001', 'Mï¿½dulo de Integraciï¿½n de Datos', 'Submï¿½dulo que conecta los sistemas acadï¿½micos', '2025-03-20', '2025-06-30');
+
+
+
+
+
+

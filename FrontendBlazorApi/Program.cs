@@ -63,6 +63,52 @@ builder.Services.AddRazorComponents()
     cliente.BaseAddress = new Uri("http://localhost:5031/"); 
 });
 
+ builder.Services.AddHttpClient("ApiResponsable", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiProducto", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiProyecto", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+ builder.Services.AddHttpClient("ApiEstado_Proyecto", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiProyecto_Producto", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiProducto_Entregable", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiResponsable_Entregable", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiArchivo", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
 
 /*
  // Política CORS opcional. Útil solo si el navegador llamara

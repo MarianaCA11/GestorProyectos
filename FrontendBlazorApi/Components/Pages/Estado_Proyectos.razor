@@ -1,0 +1,429 @@
+@page "/Estado_Proyectos"
+
+@using System.Net.Http.Json
+@using FrontendBlazorApi.Models
+@inject IHttpClientFactory fabricaHttp
+@rendermode InteractiveServer
+
+<PageTitle>Estado_Proyectos</PageTitle>
+
+<h3>Gestión de Estado_Proyectos</h3>
+
+<!-- ====================================================== -->
+<!--  BARRA DE ACCIONES GENERALES -->
+<!-- ====================================================== -->
+<div class="mb-3 d-flex gap-2">
+    <button type="button" class="btn btn-outline-secondary" @onclick="ProbarConexion">Probar conexión</button>
+    <button type="button" class="btn btn-outline-primary" @onclick="CargarEstado_Proyecto">Mostrar todos</button>
+    <button type="button" class="btn btn-outline-dark" @onclick="LimpiarFormulario">Limpiar</button>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(mensaje))
+{
+    <div class="@claseAviso" role="alert">@mensaje</div>
+}
+
+<hr />
+
+<!-- ====================================================== -->
+<!--  FORMULARIO CRUD -->
+<!-- ====================================================== -->
+<h4>Formulario de Estado_Proyectos</h4>
+
+<EditForm Model="Estado_ProyectoActual" OnValidSubmit="GuardarSegunExistencia" FormName="Estado_ProyectoForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="row g-3 mb-3" style="max-width: 800px;">
+        <!-- Campo Proyecto -->
+        <div class="col-md-6">
+            <label class="form-label mb-0">Proyecto</label>
+            <InputSelect class="form-select" @bind-Value="Estado_ProyectoActual.IdProyecto" TValue="int">
+                <option value="0">-- Seleccione Proyecto --</option>
+                @foreach (var p in listaProyecto)
+                {
+                    <option value="@p.Id">@p.Titulo (ID: @p.Id)</option>
+                }
+            </InputSelect>
+        </div>
+
+        <!-- Campo Estado -->
+        <div class="col-md-6">
+            <label class="form-label mb-0">IdEstado</label>
+            <InputSelect class="form-select" @bind-Value="Estado_ProyectoActual.IdEstado" TValue="int">
+                <option value="0">-- Seleccione Estado --</option>
+                @foreach (var e in listaEstado)
+                {
+                    <option value="@e.Id">@e.Nombre (ID: @e.Id)</option>
+                }
+            </InputSelect>
+        </div>
+    </div>
+
+    <!-- Botones CRUD -->
+    <div class="mt-3 d-flex flex-wrap align-items-center gap-3">
+        <label class="fw-bold m-0 text-muted">Acciones CRUD:</label>
+        <button type="submit" class="btn btn-primary">@textoBotonGuardar</button>
+        <div class="vr"></div>
+        <button type="button" class="btn btn-outline-secondary" @onclick="BuscarPorCodigo">Buscar (por IdProyecto)</button>
+        <button type="button" class="btn btn-warning" @onclick="ActualizarEstado_Proyecto" disabled="@(!existeEstado_Proyecto)">Actualizar</button>
+        <button type="button" class="btn btn-danger" @onclick="EliminarEstado_Proyecto" disabled="@(!existeEstado_Proyecto)">Eliminar</button>
+    </div>
+</EditForm>
+
+<hr />
+
+<!-- ====================================================== -->
+<!--  TABLA DE REGISTROS -->
+<!-- ====================================================== -->
+@if (cargando)
+{
+    <p><em>Cargando Estado_Proyecto...</em></p>
+}
+else if (listaEstado_Proyecto.Count == 0)
+{
+    <p>No hay Estado_Proyectos disponibles.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id Proyecto (Título)</th>
+                <th>Id Estado (Nombre)</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in listaEstado_Proyecto)
+            {
+                <tr>
+                    <td>@item.IdProyecto (@item.Titulo)</td>
+                    <td>@item.IdEstado (@item.Nombre)</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                                @onclick="@(() => CargarEnFormulario(item))">
+                            Cargar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<!-- ====================================================== -->
+<!--  CODE SECTION -->
+<!-- ====================================================== -->
+@code {
+    // ======================================================
+    // VARIABLES DE ESTADO
+    // ======================================================
+    private List<Estado_Proyecto> listaEstado_Proyecto = new();
+    private List<Estado> listaEstado = new();
+    private List<Proyecto> listaProyecto = new();
+
+    [SupplyParameterFromForm]
+    private Estado_Proyecto Estado_ProyectoActual { get; set; } = new();
+
+    private bool existeEstado_Proyecto = false;
+    private string textoBotonGuardar = "Crear";
+    private string mensaje = "";
+    private string claseAviso = "alert alert-info";
+    private bool cargando = false;
+
+    private const string urlBaseApi = "api/Estado_Proyecto";
+    private const string urlEstado = "api/Estado";
+    private const string urlProyecto = "api/Proyecto";
+
+    // ======================================================
+    // CICLO DE VIDA
+    // ======================================================
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.WhenAll(CargarDatosIniciales(), CargarEstado_Proyecto());
+    }
+
+    private async Task CargarDatosIniciales()
+    {
+        await Task.WhenAll(CargarEstado(), CargarProyecto());
+    }
+
+    private async Task CargarEstado()
+    {
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiEstados");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<Estado>>>(urlEstado);
+            listaEstado = respuesta?.Datos ?? new List<Estado>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar Estado: {ex.Message}");
+        }
+    }
+
+    private async Task CargarProyecto()
+    {
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiProyecto");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<Proyecto>>>(urlProyecto);
+            listaProyecto = respuesta?.Datos ?? new List<Proyecto>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar Proyecto: {ex.Message}");
+        }
+    }
+
+    // ======================================================
+    // CRUD
+    // ======================================================
+    private async Task CargarEstado_Proyecto()
+    {
+        try
+        {
+            cargando = true;
+            var cliente = fabricaHttp.CreateClient("ApiEstado_Proyecto");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<Estado_Proyecto>>>(urlBaseApi);
+            listaEstado_Proyecto = respuesta?.Datos ?? new List<Estado_Proyecto>();
+
+            mensaje = $"Se cargaron {listaEstado_Proyecto.Count} Estado_Proyecto(s).";
+            claseAviso = "alert alert-success";
+        }
+        catch (Exception error)
+        {
+            mensaje = $"Error al listar Estado_Proyecto: {error.Message}";
+            claseAviso = "alert alert-danger";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private async Task BuscarPorCodigo()
+    {
+        LimpiarMensajes();
+
+        if (Estado_ProyectoActual.IdProyecto <= 0)
+        {
+            mensaje = "Debe indicar un Id de Proyecto válido (mayor a 0) para buscar.";
+            claseAviso = "alert alert-warning";
+            return;
+        }
+
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiEstado_Proyecto");
+            var ruta = $"{urlBaseApi}/IdProyecto/{Estado_ProyectoActual.IdProyecto}";
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<Estado_Proyecto>>>(ruta);
+            var encontrado = respuesta?.Datos?.FirstOrDefault();
+
+            if (encontrado is not null)
+            {
+                Estado_ProyectoActual.IdProyecto = encontrado.IdProyecto;
+                Estado_ProyectoActual.IdEstado = encontrado.IdEstado;
+                existeEstado_Proyecto = true;
+                textoBotonGuardar = "Actualizar";
+                mensaje = $"Estado_Proyecto para Proyecto ID {encontrado.IdProyecto} cargado en el formulario.";
+                claseAviso = "alert alert-success";
+            }
+            else
+            {
+                existeEstado_Proyecto = false;
+                textoBotonGuardar = "Crear";
+                mensaje = $"Estado_Proyecto no encontrado para Proyecto ID {Estado_ProyectoActual.IdProyecto}.";
+                claseAviso = "alert alert-warning";
+            }
+        }
+        catch (Exception error)
+        {
+            existeEstado_Proyecto = false;
+            textoBotonGuardar = "Crear";
+            mensaje = $"Error al buscar Estado_Proyecto: {error.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private async Task GuardarSegunExistencia()
+    {
+        if (existeEstado_Proyecto)
+            await ActualizarEstado_Proyecto();
+        else
+            await CrearEstado_Proyecto();
+    }
+
+    private async Task CrearEstado_Proyecto()
+    {
+        LimpiarMensajes();
+
+        try
+        {
+            if (Estado_ProyectoActual.IdProyecto <= 0 || Estado_ProyectoActual.IdEstado <= 0)
+            {
+                mensaje = "Debe seleccionar un Proyecto y un Estado válidos.";
+                claseAviso = "alert alert-warning";
+                return;
+            }
+
+            var cliente = fabricaHttp.CreateClient("ApiEstado_Proyecto");
+            var respuesta = await cliente.PostAsJsonAsync(urlBaseApi, Estado_ProyectoActual);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Estado_Proyecto creado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarEstado_Proyecto();
+                LimpiarFormulario();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"No se pudo crear el Estado_Proyecto. Detalle: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception error)
+        {
+            mensaje = $"Error al crear Estado_Proyecto: {error.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private async Task ActualizarEstado_Proyecto()
+    {
+        LimpiarMensajes();
+
+        if (Estado_ProyectoActual.IdProyecto <= 0)
+        {
+            mensaje = "Debe indicar un Id de Proyecto válido para actualizar.";
+            claseAviso = "alert alert-warning";
+            return;
+        }
+
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiEstado_Proyecto");
+            var ruta = $"{urlBaseApi}/IdProyecto/{Estado_ProyectoActual.IdProyecto}";
+            var respuesta = await cliente.PutAsJsonAsync(ruta, Estado_ProyectoActual);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Estado_Proyecto actualizado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarEstado_Proyecto();
+                existeEstado_Proyecto = true;
+                textoBotonGuardar = "Actualizar";
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"No se pudo actualizar el Estado_Proyecto. Detalle: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception error)
+        {
+            mensaje = $"Error al actualizar el Estado_Proyecto: {error.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private async Task EliminarEstado_Proyecto()
+    {
+        LimpiarMensajes();
+
+        if (Estado_ProyectoActual.IdProyecto <= 0)
+        {
+            mensaje = "Debe indicar el Id de Proyecto para eliminar.";
+            claseAviso = "alert alert-warning";
+            return;
+        }
+
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiEstado_Proyecto");
+            var ruta = $"{urlBaseApi}/IdProyecto/{Estado_ProyectoActual.IdProyecto}";
+            var respuesta = await cliente.DeleteAsync(ruta);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Estado_Proyecto eliminado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarEstado_Proyecto();
+                LimpiarFormulario();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"No se pudo eliminar el Estado_Proyecto. Detalle: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception error)
+        {
+            mensaje = $"Error al eliminar el Estado_Proyecto: {error.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    // ======================================================
+    // MÉTODOS AUXILIARES
+    // ======================================================
+    private async Task ProbarConexion()
+    {
+        LimpiarMensajes();
+
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiEstado_Proyecto");
+            var respuesta = await cliente.GetAsync(urlBaseApi);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Conexión con la API verificada.";
+                claseAviso = "alert alert-success";
+            }
+            else
+            {
+                mensaje = $"La API respondió con código {(int)respuesta.StatusCode}.";
+                claseAviso = "alert alert-warning";
+            }
+        }
+        catch (Exception error)
+        {
+            mensaje = $"Error de conexión a la API: {error.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private void CargarEnFormulario(Estado_Proyecto s)
+    {
+        Estado_ProyectoActual = new Estado_Proyecto
+        {
+            IdProyecto = s.IdProyecto,
+            IdEstado = s.IdEstado
+        };
+
+        existeEstado_Proyecto = true;
+        textoBotonGuardar = "Actualizar";
+        mensaje = "Estado_Proyecto seleccionado desde el listado.";
+        claseAviso = "alert alert-info";
+    }
+
+    private void LimpiarMensajes()
+    {
+        mensaje = "";
+        claseAviso = "alert alert-info";
+    }
+
+    private void LimpiarFormulario()
+    {
+        Estado_ProyectoActual = new Estado_Proyecto();
+        existeEstado_Proyecto = false;
+        textoBotonGuardar = "Crear";
+        LimpiarMensajes();
+    }
+}

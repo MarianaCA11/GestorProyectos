@@ -1,5 +1,3 @@
-// Contenido de C:\Users\Lenovo\Desktop\Proyecto\FrontendBlazorApi\Models\Estado.cs
-
 using System.Text.Json.Serialization;
 
 namespace FrontendBlazorApi.Models

@@ -1,0 +1,372 @@
+@page "/Producto_Entregables"
+
+@using System.Net.Http.Json
+@using FrontendBlazorApi.Models
+@inject IHttpClientFactory fabricaHttp
+@rendermode InteractiveServer
+
+<PageTitle>Gestión de Producto_Entregable</PageTitle>
+
+<h3 class="mb-4 text-primary fw-bold">Gestión de Producto_Entregable</h3>
+
+<div class="mb-3 d-flex flex-wrap gap-2">
+    <button type="button" class="btn btn-outline-secondary" @onclick="ProbarConexion">Probar conexión</button>
+    <button type="button" class="btn btn-outline-primary" @onclick="CargarProducto_Entregable">Mostrar todos</button>
+    <button type="button" class="btn btn-outline-dark" @onclick="LimpiarFormulario">Limpiar</button>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(mensaje))
+{
+    <div class="@claseAviso" role="alert">@mensaje</div>
+}
+
+<hr />
+
+<h4 class="text-secondary">Formulario de Asociación Producto_Entregable</h4>
+
+<EditForm Model="Producto_EntregableActual" OnValidSubmit="GuardarSegunProducto_Entregable">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="d-flex flex-column gap-3 mb-3" style="max-width: 500px;">
+        <div>
+            <label class="form-label mb-0">Producto</label>
+            <InputSelect class="form-select" @bind-Value="Producto_EntregableActual.IdProducto" TValue="int">
+                <option value="0">-- Seleccione Producto --</option>
+                @foreach (var p in listaProducto)
+                {
+                    <option value="@p.Id">@p.Titulo (ID: @p.Id)</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div>
+            <label class="form-label mb-0">Entregable</label>
+            <InputSelect class="form-select" @bind-Value="Producto_EntregableActual.IdEntregable" TValue="int">
+                <option value="0">-- Seleccione Entregable --</option>
+                @foreach (var e in listaEntregable)
+                {
+                    <option value="@e.Id">@e.Titulo (ID: @e.Id)</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div>
+            <label class="form-label mb-0">Fecha de Asociación</label>
+            <InputDate class="form-control" @bind-Value="Producto_EntregableActual.FechaAsociacion" />
+        </div>
+    </div>
+
+    <div class="mt-3 d-flex flex-wrap gap-2 align-items-center">
+        <label class="fw-bold m-0">Acciones CRUD:</label>
+        <button type="submit" class="btn btn-primary">@textoBotonGuardar</button>
+        <button type="button" class="btn btn-secondary" @onclick="BuscarPorCodigo">Buscar</button>
+        <button type="button" class="btn btn-danger" @onclick="EliminarProducto_Entregable" disabled="@(!existeProducto_Entregable)">Eliminar</button>
+    </div>
+</EditForm>
+
+<hr />
+
+@if (cargando)
+{
+    <p><em>Cargando asociaciones...</em></p>
+}
+else if (listaProducto_Entregable.Count == 0)
+{
+    <p>No hay asociaciones disponibles.</p>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Producto</th>
+                <th>Entregable</th>
+                <th>Fecha Asociación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in listaProducto_Entregable)
+            {
+                <tr>
+                    <td>@p.IdProducto (@p.ProductoTitulo)</td>
+                    <td>@p.IdEntregable (@p.EntregableTitulo)</td>
+                    <td>@p.FechaAsociacion?.ToShortDateString()</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-primary" @onclick="(() => CargarEnFormulario(p))">
+                            Cargar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    // ========================= VARIABLES =========================
+    private List<Producto_Entregable> listaProducto_Entregable = new();
+    private List<Entregable> listaEntregable = new();
+    private List<Producto> listaProducto = new();
+
+    private Producto_Entregable Producto_EntregableActual { get; set; } = new();
+
+    private bool existeProducto_Entregable = false;
+    private string textoBotonGuardar = "Crear";
+    private string mensaje = "";
+    private string claseAviso = "alert alert-info";
+    private bool cargando = false;
+
+    private const string urlBaseApi = "api/Producto_Entregable";
+    private const string urlEntregable = "api/Entregable";
+    private const string urlProducto = "api/Producto";
+
+    // ========================= CICLO DE VIDA =========================
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.WhenAll(CargarEntregable(), CargarProducto(), CargarProducto_Entregable());
+    }
+
+    // ========================= CARGAS =========================
+    private async Task CargarProducto()
+    {
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiProducto");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<Producto>>>(urlProducto);
+            listaProducto = respuesta?.Datos ?? [];
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar Productos: {ex.Message}");
+        }
+    }
+
+    private async Task CargarEntregable()
+    {
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiEntregable");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<Entregable>>>(urlEntregable);
+            listaEntregable = respuesta?.Datos ?? [];
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar Entregables: {ex.Message}");
+        }
+    }
+
+    private async Task CargarProducto_Entregable()
+    {
+        try
+        {
+            cargando = true;
+            var cliente = fabricaHttp.CreateClient("ApiProducto_Entregable");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<Producto_Entregable>>>(urlBaseApi);
+            listaProducto_Entregable = respuesta?.Datos ?? [];
+            mensaje = $"Se cargaron {listaProducto_Entregable.Count} asociaciones.";
+            claseAviso = "alert alert-success";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al listar asociaciones: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    // ========================= CRUD =========================
+    private async Task BuscarPorCodigo()
+    {
+        LimpiarMensajes();
+
+        if (Producto_EntregableActual.IdEntregable <= 0 || Producto_EntregableActual.IdProducto <= 0)
+        {
+            mensaje = "Debe indicar IdEntregable e IdProducto válidos.";
+            claseAviso = "alert alert-warning";
+            return;
+        }
+
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiProducto_Entregable");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<Producto_Entregable>>>(urlBaseApi);
+            var encontrado = respuesta?.Datos?
+                .FirstOrDefault(x => x.IdEntregable == Producto_EntregableActual.IdEntregable &&
+                                     x.IdProducto == Producto_EntregableActual.IdProducto);
+
+            if (encontrado is not null)
+            {
+                Producto_EntregableActual = encontrado;
+                existeProducto_Entregable = true;
+                textoBotonGuardar = "Actualizar";
+                mensaje = "Asociación encontrada.";
+                claseAviso = "alert alert-success";
+            }
+            else
+            {
+                mensaje = "Asociación no encontrada.";
+                claseAviso = "alert alert-warning";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al buscar: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private async Task GuardarSegunProducto_Entregable()
+    {
+        if (existeProducto_Entregable)
+            await ActualizarProducto_Entregable();
+        else
+            await CrearProducto_Entregable();
+    }
+
+    private async Task CrearProducto_Entregable()
+    {
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiProducto_Entregable");
+            var respuesta = await cliente.PostAsJsonAsync(urlBaseApi, Producto_EntregableActual);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Asociación creada correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarProducto_Entregable();
+                LimpiarFormulario();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"Error al crear: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al crear: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private async Task ActualizarProducto_Entregable()
+    {
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiProducto_Entregable");
+            var ruta = $"{urlBaseApi}/IdProducto/{Producto_EntregableActual.IdProducto}";
+
+            var datos = new Dictionary<string, object?>
+            {
+                { "FechaAsociacion", Producto_EntregableActual.FechaAsociacion }
+            };
+
+            var respuesta = await cliente.PutAsJsonAsync(ruta, datos);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Asociación actualizada correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarProducto_Entregable();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"Error al actualizar: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al actualizar: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private async Task EliminarProducto_Entregable()
+    {
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiProducto_Entregable");
+            var ruta = $"{urlBaseApi}/IdProducto/{Producto_EntregableActual.IdProducto}";
+            var respuesta = await cliente.DeleteAsync(ruta);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Asociación eliminada correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarProducto_Entregable();
+                LimpiarFormulario();
+            }
+            else
+            {
+                var detalle = await respuesta.Content.ReadAsStringAsync();
+                mensaje = $"Error al eliminar: {detalle}";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    // ========================= AUXILIARES =========================
+    private async Task ProbarConexion()
+    {
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiProducto_Entregable");
+            var respuesta = await cliente.GetAsync(urlBaseApi);
+
+            if (respuesta.IsSuccessStatusCode)
+                mensaje = "Conexión con la API verificada.";
+            else
+                mensaje = $"La API respondió con código {(int)respuesta.StatusCode}.";
+
+            claseAviso = "alert alert-info";
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error de conexión: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+
+    private void CargarEnFormulario(Producto_Entregable p)
+    {
+        Producto_EntregableActual = new Producto_Entregable
+        {
+            IdProducto = p.IdProducto,
+            IdEntregable = p.IdEntregable,
+            FechaAsociacion = p.FechaAsociacion
+        };
+
+        existeProducto_Entregable = true;
+        textoBotonGuardar = "Actualizar";
+        mensaje = "Asociación cargada en el formulario.";
+        claseAviso = "alert alert-info";
+    }
+
+    private void LimpiarFormulario()
+    {
+        Producto_EntregableActual = new Producto_Entregable();
+        existeProducto_Entregable = false;
+        textoBotonGuardar = "Crear";
+        LimpiarMensajes();
+    }
+
+    private void LimpiarMensajes()
+    {
+        mensaje = "";
+        claseAviso = "alert alert-info";
+    }
+}

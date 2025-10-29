@@ -91,6 +91,7 @@ C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendB
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.AssemblyInfo.cs
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.csproj.CoreCompileInputs.cache
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.sourcelink.json
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\rjimswa.dswa.cache.json
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json

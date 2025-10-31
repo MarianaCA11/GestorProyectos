@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lenovo\\Desktop\\ProyectoAPI\\webapicsharp\\webapicsharp.csproj": {}
+    "C:\\Users\\Juan\\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\\Desktop\\Progamacion\\servicios_web\\GestorProyectos\\webapicsharp\\webapicsharp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lenovo\\Desktop\\ProyectoAPI\\webapicsharp\\webapicsharp.csproj": {
+    "C:\\Users\\Juan\\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\\Desktop\\Progamacion\\servicios_web\\GestorProyectos\\webapicsharp\\webapicsharp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lenovo\\Desktop\\ProyectoAPI\\webapicsharp\\webapicsharp.csproj",
+        "projectUniqueName": "C:\\Users\\Juan\\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\\Desktop\\Progamacion\\servicios_web\\GestorProyectos\\webapicsharp\\webapicsharp.csproj",
         "projectName": "webapicsharp",
-        "projectPath": "C:\\Users\\Lenovo\\Desktop\\ProyectoAPI\\webapicsharp\\webapicsharp.csproj",
-        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lenovo\\Desktop\\ProyectoAPI\\webapicsharp\\obj\\",
+        "projectPath": "C:\\Users\\Juan\\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\\Desktop\\Progamacion\\servicios_web\\GestorProyectos\\webapicsharp\\webapicsharp.csproj",
+        "packagesPath": "C:\\Users\\Juan\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Juan\\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\\Desktop\\Progamacion\\servicios_web\\GestorProyectos\\webapicsharp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Juan\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -98,7 +99,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,0 +1,369 @@
+@page "/ObjetivoEstrategicos"
+ 
+@using System.Net.Http.Json
+@using FrontendBlazorApi.Models
+@inject IHttpClientFactory fabricaHttp
+@rendermode InteractiveServer
+ 
+<PageTitle>Gestión de Objetivos Estratégicos</PageTitle>
+ 
+<h3 class="mb-3">Gestión de Objetivos Estratégicos</h3>
+ 
+<!-- Barra de acciones -->
+<div class="mb-3 d-flex gap-2">
+    <button class="btn btn-outline-secondary" @onclick="ProbarConexion">Probar conexión</button>
+    <button class="btn btn-outline-primary" @onclick="CargarObjetivos">Mostrar todos</button>
+    <button class="btn btn-outline-dark" @onclick="LimpiarFormulario">Limpiar</button>
+</div>
+ 
+<!-- Mensajes -->
+@if (!string.IsNullOrWhiteSpace(mensaje))
+{
+    <div class="@claseAviso" role="alert">@mensaje</div>
+}
+<hr />
+ 
+<h4>Formulario de Objetivo Estratégico</h4>
+ 
+<EditForm Model="ObjetivoActual" OnValidSubmit="GuardarSegunEstado">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+ 
+    <div class="d-flex flex-column gap-2 mb-3" style="max-width: 500px;">
+        <div class="d-flex gap-2 align-items-center">
+            <div style="width: 100px;">
+                <label class="form-label mb-0">Id</label>
+                <InputNumber class="form-control" @bind-Value="ObjetivoActual.Id" />
+            </div>
+        </div>
+ 
+        <div>
+            <label class="form-label mb-0">Variable Estratégica</label>
+            <InputSelect class="form-select" @bind-Value="ObjetivoActual.IdVariable" TValue="int">
+                <option value="0">-- Seleccione Variable --</option>
+                @foreach (var v in listaVariables)
+                {
+                    <option value="@v.Id">@v.Titulo</option>
+                }
+            </InputSelect>
+        </div>
+ 
+        <div>
+            <label class="form-label mb-0">Título</label>
+            <InputText class="form-control" @bind-Value="ObjetivoActual.Titulo" />
+        </div>
+ 
+        <div>
+            <label class="form-label mb-0">Descripción</label>
+            <InputTextArea class="form-control" @bind-Value="ObjetivoActual.Descripcion" />
+        </div>
+    </div>
+ 
+    <div class="mt-3 d-flex flex-wrap gap-2">
+        <label class="fw-bold m-0 align-self-center">Acciones CRUD:</label>
+        <button type="submit" class="btn btn-primary">@textoBotonGuardar</button>
+        <button type="button" class="btn btn-secondary" @onclick="BuscarPorCodigo">Buscar</button>
+        <button type="button" class="btn btn-warning" @onclick="ActualizarObjetivo" disabled="@(!existeObjetivo)">Actualizar</button>
+        <button type="button" class="btn btn-danger" @onclick="EliminarObjetivo" disabled="@(!existeObjetivo)">Eliminar</button>
+    </div>
+</EditForm>
+ 
+<hr />
+ 
+@if (cargando)
+{
+    <p><em>Cargando Objetivos...</em></p>
+}
+else if (listaObjetivos.Count == 0)
+{
+    <p>No hay objetivos disponibles.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Variable Estratégica</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var o in listaObjetivos)
+            {
+                <tr>
+                    <td>@o.Id</td>
+                    <td>@listaVariables.FirstOrDefault(v => v.Id == o.IdVariable)?.Titulo</td>
+                    <td>@o.Titulo</td>
+                    <td>@o.Descripcion</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" @onclick="@(() => CargarEnFormulario(o))">Cargar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+ 
+@code {
+    private List<ObjetivoEstrategico> listaObjetivos = new();
+    private List<VariableEstrategica> listaVariables = new();
+ 
+    [SupplyParameterFromForm]
+    private ObjetivoEstrategico ObjetivoActual { get; set; } = new();
+ 
+    private bool existeObjetivo = false;
+    private string textoBotonGuardar = "Crear";
+    private string mensaje = "";
+    private string claseAviso = "alert alert-info";
+    private bool cargando = false;
+ 
+    private const string urlBaseApi = "api/ObjetivoEstrategico";
+    private const string urlVariable = "api/VariableEstrategica";
+ 
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.WhenAll(CargarVariables(), CargarObjetivos());
+    }
+ 
+    private async Task CargarVariables()
+    {
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiVariableEstrategica");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<VariableEstrategica>>>(urlVariable);
+            listaVariables = respuesta?.Datos ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar variables: {ex.Message}");
+        }
+    }
+ 
+    private async Task CargarObjetivos()
+    {
+        try
+        {
+            cargando = true;
+            var cliente = fabricaHttp.CreateClient("ApiObjetivoEstrategico");
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<ObjetivoEstrategico>>>(urlBaseApi);
+            listaObjetivos = respuesta?.Datos ?? new();
+            mensaje = $"Se cargaron {listaObjetivos.Count} registro(s).";
+            claseAviso = "alert alert-success";
+        }
+        catch (Exception error)
+        {
+            mensaje = $"Error al listar objetivos: {error.Message}";
+            claseAviso = "alert alert-danger";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+ 
+    private async Task BuscarPorCodigo()
+    {
+        LimpiarMensajes();
+ 
+        if (ObjetivoActual.Id <= 0)
+        {
+            mensaje = "Debe indicar un Id válido.";
+            claseAviso = "alert alert-warning";
+            return;
+        }
+ 
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiObjetivoEstrategico");
+            var ruta = $"{urlBaseApi}/Id/{ObjetivoActual.Id}";
+            var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<ObjetivoEstrategico>>>(ruta);
+            var encontrado = respuesta?.Datos?.FirstOrDefault();
+ 
+            if (encontrado is not null)
+            {
+                ObjetivoActual = new ObjetivoEstrategico
+                {
+                    Id = encontrado.Id,
+                    IdVariable = encontrado.IdVariable,
+                    Titulo = encontrado.Titulo,
+                    Descripcion = encontrado.Descripcion
+                };
+                existeObjetivo = true;
+                textoBotonGuardar = "Actualizar";
+                mensaje = "Objetivo cargado.";
+                claseAviso = "alert alert-success";
+            }
+            else
+            {
+                mensaje = "No encontrado.";
+                claseAviso = "alert alert-warning";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+ 
+    private async Task GuardarSegunEstado()
+    {
+        if (existeObjetivo)
+            await ActualizarObjetivo();
+        else
+            await CrearObjetivo();
+    }
+ 
+    private async Task CrearObjetivo()
+    {
+        LimpiarMensajes();
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiObjetivoEstrategico");
+            var respuesta = await cliente.PostAsJsonAsync(urlBaseApi, ObjetivoActual);
+ 
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Objetivo creado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarObjetivos();
+                LimpiarFormulario();
+            }
+            else
+            {
+                mensaje = "Error al crear el objetivo.";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+ 
+    private async Task ActualizarObjetivo()
+    {
+        LimpiarMensajes();
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiObjetivoEstrategico");
+            var ruta = $"{urlBaseApi}/Id/{ObjetivoActual.Id}";
+            var datos = new Dictionary<string, object?>
+            {
+                { "IdVariable", ObjetivoActual.IdVariable},
+                { "Titulo", ObjetivoActual.Titulo},
+                { "Descripcion", ObjetivoActual.Descripcion }
+               
+            };
+            var respuesta = await cliente.PutAsJsonAsync(ruta, datos);
+ 
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Objetivo actualizado correctamente.";
+                claseAviso = "alert alert-success";
+                await CargarObjetivos();
+            }
+            else
+            {
+                mensaje = "Error al actualizar.";
+                claseAviso = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+ 
+    private async Task EliminarObjetivo()
+    {
+        LimpiarMensajes();
+ 
+        if (ObjetivoActual.Id <= 0)
+        {
+            mensaje = "Debe indicar el Id para eliminar.";
+            claseAviso = "alert alert-warning";
+            return;
+        }
+ 
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiObjetivoEstrategico");
+            var ruta = $"{urlBaseApi}/Id/{ObjetivoActual.Id}";
+            var respuesta = await cliente.DeleteAsync(ruta);
+ 
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Objetivo eliminado.";
+                claseAviso = "alert alert-success";
+                await CargarObjetivos();
+                LimpiarFormulario();
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+ 
+    private async Task ProbarConexion()
+    {
+        LimpiarMensajes();
+        try
+        {
+            var cliente = fabricaHttp.CreateClient("ApiObjetivoEstrategico");
+            var respuesta = await cliente.GetAsync(urlBaseApi);
+ 
+            if (respuesta.IsSuccessStatusCode)
+            {
+                mensaje = "Conexión con la API verificada.";
+                claseAviso = "alert alert-success";
+            }
+            else
+            {
+                mensaje = $"La API respondió con código {(int)respuesta.StatusCode}.";
+                claseAviso = "alert alert-warning";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error de conexión: {ex.Message}";
+            claseAviso = "alert alert-danger";
+        }
+    }
+ 
+    private void CargarEnFormulario(ObjetivoEstrategico o)
+    {
+        ObjetivoActual = new ObjetivoEstrategico
+        {
+            Id = o.Id,
+            IdVariable = o.IdVariable,
+            Titulo = o.Titulo,
+            Descripcion = o.Descripcion
+        };
+        existeObjetivo = true;
+        textoBotonGuardar = "Actualizar";
+        mensaje = "Objetivo cargado desde la lista.";
+        claseAviso = "alert alert-info";
+    }
+ 
+    private void LimpiarMensajes()
+    {
+        mensaje = "";
+        claseAviso = "alert alert-info";
+    }
+ 
+    private void LimpiarFormulario()
+    {
+        ObjetivoActual = new ObjetivoEstrategico();
+        existeObjetivo = false;
+        textoBotonGuardar = "Crear";
+        LimpiarMensajes();
+    }
+}

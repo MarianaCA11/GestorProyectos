@@ -286,64 +286,140 @@ CREATE TABLE Meta_Proyecto (
 );
 
 
-INSERT INTO TipoProyecto (Nombre, Descripcion) VALUES
-('Operativo', 'Proyectos enfocados en la mejora o mantenimiento de procesos internos');
+-- TABLA: Usuario
+INSERT INTO Usuario (Email, Contrasena, RutaAvatar, Activo) VALUES
+('juan.perez@email.com', 'hash_secreto1', 'avatars/juan.jpg', 1),
+('maria.gomez@email.com', 'hash_secreto2', 'avatars/maria.jpg', 1),
+('carlos.ruiz@email.com', 'hash_secreto3', 'avatars/carlos.jpg', 1),
+('ana.lopez@email.com', 'hash_secreto4', NULL, 1);
 
-INSERT INTO TipoProyecto (Nombre, Descripcion) VALUES
-('Innovaci�n', 'Proyectos que introducen nuevas soluciones, productos o tecnolog�as');
-
-INSERT INTO TipoProyecto (Nombre, Descripcion) VALUES
-('Investigaci�n', 'Proyectos para la generaci�n de conocimiento o desarrollo experimental');
-
-
+-- TABLA: TipoResponsable
 INSERT INTO TipoResponsable (Titulo, Descripcion) VALUES
-('Gerente de Proyecto', 'Responsable principal de la planificaci�n, ejecuci�n y cierre de un proyecto.');
+('Gerente de Proyecto', 'Líder principal y responsable de la ejecución del proyecto.'),
+('Analista Funcional', 'Define los requisitos y el alcance del producto.'),
+('Desarrollador Senior', 'Encargado de la implementación técnica.');
 
-INSERT INTO TipoResponsable (Titulo, Descripcion) VALUES
-('L�der de Microproyecto', 'Responsable de la gesti�n y coordinaci�n de una tarea o componente espec�fico dentro de un proyecto m�s grande.');
+-- TABLA: Responsable
+INSERT INTO Responsable (IdTipoResponsable, IdUsuario, Nombre) VALUES
+(1, 1, 'Juan Pérez'), -- Gerente (Usuario 1)
+(2, 2, 'María Gómez'), -- Analista (Usuario 2)
+(3, 3, 'Carlos Ruiz'); -- Desarrollador (Usuario 3)
 
-INSERT INTO TipoResponsable (Titulo, Descripcion) VALUES
-('Miembro del Equipo', 'Responsable de ejecutar las tareas asignadas y contribuir al logro de los objetivos del proyecto.');
+-- TABLA: TipoProyecto
+INSERT INTO TipoProyecto (Nombre, Descripcion) VALUES
+('Desarrollo Software', 'Proyectos enfocados en la creación de aplicaciones y sistemas.'),
+('Infraestructura TI', 'Proyectos de actualización o implementación de hardware y redes.'),
+('Investigación y Desarrollo', 'Proyectos de exploración de nuevas tecnologías o mercados.');
 
-INSERT INTO Entregable (Codigo, Titulo, Descripcion, FechaInicio, FechaFinPrevista) VALUES
-('E-001', 'M�dulo de Integraci�n de Datos', 'Subm�dulo que conecta los sistemas acad�micos', '2025-03-20', '2025-06-30');
-
-
-INSERT INTO VariableEstrategica (Titulo) VALUES
-('Innovaci�n');
-
--- Tres registros adicionales
-INSERT INTO VariableEstrategica (Titulo, Descripcion) VALUES
-('Sostenibilidad Financiera', 'Asegurar la viabilidad econ�mica a largo plazo de los proyectos e iniciativas.'),
-('Eficiencia Operacional', 'Mejorar los procesos internos para reducir costos y tiempos de ejecuci�n.'),
-('Experiencia del Cliente/Usuario', 'Foco en optimizar la interacci�n y satisfacci�n de los usuarios con nuestros servicios o productos.');
-
+-- TABLA: Estado
 INSERT INTO Estado (Nombre, Descripcion) VALUES
-('En ejecuci�n', 'El proyecto, tarea o elemento se encuentra activo y progresando.'),
-('Finalizado', 'El proyecto, tarea o elemento ha sido completado y cerrado exitosamente.');
+('Planificación', 'Fase inicial, definición de alcance y recursos.'),
+('En Ejecución', 'El trabajo principal se está llevando a cabo.'),
+('En Revisión', 'El producto está siendo validado por el cliente o QA.'),
+('Completado', 'El proyecto o producto ha finalizado con éxito.'),
+('Suspendido', 'El proyecto ha sido pausado temporalmente.');
 
--- Sentencias INSERT para la tabla Usuario
-INSERT INTO Usuario (Email, Contrasena, Activo) VALUES
-('laura.gomez@uni.edu', 'P4$$w0rd!', 1);
-
-INSERT INTO Usuario (Email, Contrasena, Activo) VALUES
-('carlos.ramirez@uni.edu', 'P4$$w0rd!', 1);
-
-INSERT INTO Usuario (Email, Contrasena, Activo) VALUES
-('ana.torres@uni.edu', 'P4$$w0rd!', 1);
-
--- Sentencias INSERT para la tabla TipoProducto
+-- TABLA: TipoProducto
 INSERT INTO TipoProducto (Nombre, Descripcion) VALUES
-('Software a Medida', 'Desarrollo de aplicaciones y sistemas dise�ados espec�ficamente para las necesidades del cliente.'),
-('Consultor�a T�cnica', 'Servicios de asesoramiento especializado en arquitectura, implementaci�n o mejora de sistemas.'),
-('Infraestructura Cloud', 'Implementaci�n y gesti�n de recursos y servicios en plataformas de nube p�blica o privada.');
+('Módulo Web', 'Componente funcional de una aplicación web.'),
+('API de Servicio', 'Interfaz de programación de aplicaciones para microservicios.'),
+('Documentación Técnica', 'Manuales y especificaciones del sistema.');
 
--- Sentencia INSERT para la tabla Entregable
+-- TABLA: Entregable
 INSERT INTO Entregable (Codigo, Titulo, Descripcion, FechaInicio, FechaFinPrevista) VALUES
-('E-001', 'M�dulo de Integraci�n de Datos', 'Subm�dulo que conecta los sistemas acad�micos', '2025-03-20', '2025-06-30');
+('E001', 'Diseño UX/UI del Portal', 'Diseños de alta fidelidad para el portal web.', '2025-10-01', '2025-10-15'),
+('E002', 'Back-end para Autenticación', 'Servicio REST para manejar el login y registro de usuarios.', '2025-10-10', '2025-10-25'),
+('E003', 'Informe de Progreso Mensual', 'Documento resumen del avance del proyecto.', '2025-11-01', '2025-11-05');
 
+-- TABLA: VariableEstrategica
+INSERT INTO VariableEstrategica (Titulo, Descripcion) VALUES
+('Eficiencia Operacional', 'Optimización de procesos internos para reducir costes.'),
+('Satisfacción del Cliente', 'Mejora en la calidad del servicio y respuesta al usuario.'),
+('Crecimiento del Mercado', 'Expansión a nuevas áreas geográficas o segmentos.');
 
+-- TABLA: Producto
+INSERT INTO Producto (IdTipoProducto, Codigo, Titulo, Descripcion, FechaInicio, FechaFinPrevista) VALUES
+(1, 'P001', 'Portal de Clientes', 'Plataforma web para la gestión de cuentas de clientes.', '2025-10-01', '2026-03-30'),
+(2, 'P002', 'API de Notificaciones', 'API que gestiona el envío de correos y SMS.', '2025-11-15', '2025-12-30'),
+(3, 'P003', 'Manual de Integración v1.0', 'Documentación para desarrolladores que usen la API.', '2025-12-10', '2025-12-20');
 
+-- TABLA: Proyecto
+INSERT INTO Proyecto (IdResponsable, IdTipoProyecto, Codigo, Titulo, Descripcion, FechaInicio, FechaFinPrevista, FechaModificacion, RutaLogo) VALUES
+(1, 1, 'PROJ-S01', 'Sistema de Gestión Interna v2', 'Proyecto principal para la modernización de los sistemas.', '2025-09-01', '2026-06-30', GETDATE(), 'logos/v2.png'),
+(1, 2, 'PROJ-T02', 'Upgrade de Servidores Cloud', 'Actualización de la infraestructura de desarrollo.', '2025-11-01', '2025-12-31', GETDATE(), NULL),
+(2, 1, 'PROJ-S01-01', 'Módulo de Facturación Electrónica', 'Sub-proyecto bajo el Sistema de Gestión Interna v2.', '2026-01-15', '2026-05-15', GETDATE(), NULL);
+
+-- NOTA: Relacionando el sub-proyecto (Id 3) con el proyecto padre (Id 1)
+UPDATE Proyecto SET IdProyectoPadre = 1 WHERE Id = 3;
+
+-- TABLA: Estado_Proyecto
+INSERT INTO Estado_Proyecto (IdProyecto, IdEstado) VALUES
+(1, 2), -- Sistema de Gestión Interna v2: En Ejecución
+(2, 1), -- Upgrade de Servidores Cloud: Planificación
+(3, 1); -- Módulo de Facturación Electrónica: Planificación
+
+-- TABLA: Proyecto_Producto
+INSERT INTO Proyecto_Producto (IdProyecto, IdProducto, FechaAsociacion) VALUES
+(1, 1, '2025-09-15'), -- Sistema V2 incluye Portal de Clientes
+(1, 2, '2025-10-01'), -- Sistema V2 incluye API de Notificaciones
+(3, 1, '2026-01-15'); -- Módulo de Facturación usa Portal de Clientes
+
+-- TABLA: Producto_Entregable
+INSERT INTO Producto_Entregable (IdProducto, IdEntregable, FechaAsociacion) VALUES
+(1, 1, '2025-10-01'), -- Portal de Clientes necesita Diseño UX
+(2, 2, '2025-10-10'); -- API de Notificaciones necesita Back-end Autenticación
+
+-- TABLA: Responsable_Entregable
+INSERT INTO Responsable_Entregable (IdResponsable, IdEntregable, FechaAsociacion) VALUES
+(2, 1, '2025-10-01'), -- María (Analista) es responsable del Diseño UX
+(3, 2, '2025-10-10'); -- Carlos (Desarrollador) es responsable del Back-end
+
+-- TABLA: Archivo
+INSERT INTO Archivo (IdUsuario, Ruta, Nombre, Tipo, Fecha) VALUES
+(1, 'docs/SOW_V2.pdf', 'Statement of Work V2', 'PDF', '2025-09-01'),
+(2, 'docs/Especificaciones_UX.docx', 'Especificaciones UX', 'DOCX', '2025-10-05'),
+(3, 'docs/Log_DB.txt', 'Log de Producción', 'TXT', GETDATE());
+
+-- TABLA: Archivo_Entregable
+INSERT INTO Archivo_Entregable (IdArchivo, IdEntregable) VALUES
+(2, 1); -- Especificaciones UX (Archivo 2) asociado al Diseño UX (Entregable 1)
+
+-- TABLA: Actividad
+INSERT INTO Actividad (IdEntregable, Titulo, Descripcion, FechaInicio, FechaFinPrevista, PorcentajeAvance) VALUES
+(1, 'Wireframes de Login', 'Definición de flujos de usuario para el inicio de sesión.', '2025-10-01', '2025-10-05', 100),
+(1, 'Prototipo Interactivo', 'Creación del prototipo navegable en Figma.', '2025-10-06', '2025-10-15', 80),
+(2, 'Configuración de Servidor', 'Instalación de dependencias y base de datos para el microservicio.', '2025-10-10', '2025-10-12', 100),
+(2, 'Implementación de Tokens JWT', 'Desarrollo de la lógica de autenticación con JWT.', '2025-10-13', '2025-10-25', 60);
+
+-- TABLA: Presupuesto
+INSERT INTO Presupuesto (IdProyecto, MontoSolicitado, Estado, MontoAprobado, PeriodoAnio, FechaSolicitud, FechaAprobacion) VALUES
+(1, 50000.00, 'Aprobado', 45000.00, 2026, '2025-11-01', '2025-11-15'), -- Presupuesto Proyecto Principal (Id 1)
+(2, 15000.00, 'Aprobado', 15000.00, 2026, '2025-12-01', '2025-12-10'), -- Presupuesto Upgrade Servidores (Id 2)
+(3, 25000.00, 'Pendiente', NULL, 2026, '2026-01-01', NULL); -- Presupuesto Módulo Facturación (Id 3)
+
+-- TABLA: DistribucionPresupuesto
+INSERT INTO DistribucionPresupuesto (IdPresupuestoPadre, IdProyectoHijo, MontoAsignado) VALUES
+(1, 3, 10000.00); -- Del Presupuesto (Id 1) se asignan 10,000 al Módulo Facturación (Proyecto 3)
+
+-- TABLA: EjecucionPresupuesto
+INSERT INTO EjecucionPresupuesto (IdPresupuesto, Anio, MontoPlaneado, MontoEjecutado) VALUES
+(1, 2026, 45000.00, 5000.00), -- Ejecución inicial Proyecto 1
+(2, 2026, 15000.00, 0.00); -- Ejecución inicial Proyecto 2
+
+-- TABLA: ObjetivoEstrategico
+INSERT INTO ObjetivoEstrategico (IdVariable, Titulo, Descripcion) VALUES
+(1, 'Reducir el Tiempo de Despliegue', 'Disminuir el tiempo de puesta en producción en un 20%.'),
+(2, 'Aumentar la Tasa de Retención', 'Lograr una tasa de retención de clientes del 95%.');
+
+-- TABLA: MetaEstrategica
+INSERT INTO MetaEstrategica (IdObjetivo, Titulo, Descripcion) VALUES
+(1, 'Automatizar CI/CD', 'Implementar pipelines de integración y despliegue continuo antes de Q2 2026.'),
+(2, 'Encuesta de Satisfacción > 4.5/5', 'Alcanzar un puntaje promedio de satisfacción de 4.5 en las encuestas semestrales.');
+
+-- TABLA: Meta_Proyecto
+INSERT INTO Meta_Proyecto (IdMeta, IdProyecto, FechaAsociacion) VALUES
+(1, 1, '2025-10-01'), -- Proyecto Sistema V2 contribuye a Automatizar CI/CD
+(1, 2, '2025-11-01'); -- Proyecto Upgrade Servidores contribuye a Automatizar CI/CD
 
 
 

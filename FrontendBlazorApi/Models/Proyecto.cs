@@ -8,7 +8,7 @@ namespace FrontendBlazorApi.Models
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Id { get; set; }
-        public int IdProyectoPadre { get; set; }
+        public int? IdProyectoPadre { get; set; }
         public int IdResponsable { get; set; }  
         public int IdTipoProyecto { get; set; } 
         public string Codigo { get; set; } = string.Empty;

@@ -275,7 +275,7 @@ else
             var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<Proyecto>>>(urlBaseApi);
             
             // 💡 Corrección de CS8602 potencial: Uso de null-coalescing
-            listaProyecto = respuesta?.Datos ?? new List<Proyecto>();
+            listaProyecto = respuesta?.Datos ?? new ();
 
             mensaje = $"Se cargaron {listaProyecto.Count} Proyecto(s).";
             claseAviso = "alert alert-success";
@@ -406,7 +406,7 @@ else
         try
         {
             var cliente = fabricaHttp.CreateClient("ApiProyecto");
-            var ruta = $"{urlBaseApi}/id/{ProyectoActual.Id}"; 
+            var ruta = $"{urlBaseApi}/Id/{ProyectoActual.Id}"; 
         
             var datos = new Dictionary<string, object?>
             {
@@ -462,7 +462,7 @@ else
         try
         {
             var cliente = fabricaHttp.CreateClient("ApiProyecto");
-            var ruta = $"{urlBaseApi}/id/{ProyectoActual.Id}";
+            var ruta = $"{urlBaseApi}/Id/{ProyectoActual.Id}";
             var respuesta = await cliente.DeleteAsync(ruta);
 
             if (respuesta.IsSuccessStatusCode)
@@ -521,7 +521,7 @@ else
 
     private void CargarEnFormulario(Proyecto p)
     {
-        // Se hace una copia para evitar modificar el objeto directamente en la lista
+
         ProyectoActual = new Proyecto
         {
             Id = p.Id,
@@ -541,7 +541,6 @@ else
         };
         
         existeProyecto = true; 
-        textoBotonGuardar = "Actualizar";
         mensaje = "Proyecto seleccionado desde el listado."; 
         claseAviso = "alert alert-info";
     }

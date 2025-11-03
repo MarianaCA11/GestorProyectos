@@ -130,9 +130,7 @@ else
                     <td>@e.Id</td>
                     <td>@e.Codigo</td>
                     <td>@e.Titulo</td>
-                    <td>@e.Descripcion</td>
-                    @* ERROR CORREGIDO: Propiedad 'FechaInicion' no existe. Se cambió a 'FechaInicio' *@
-                    <td>@e.FechaInicio</td>
+                    <td>@e.Descripcion</td> 
                     <td>@e.FechaFinPrevista</td>
                     <td>@e.FechaModificacion</td>
                     <td>@e.FechaFinalizacion</td>
@@ -317,7 +315,7 @@ else
 
         if (!ValidarFechas())
         {
-            return; // Detiene la ejecución si hay un error
+            return; 
         }
         
         try
@@ -362,7 +360,7 @@ else
 
           if (!ValidarFechas())
         {
-            return; // Detiene la ejecución si hay un error
+            return; 
         }
 
         if (EntregableActual.Id <= 0)
@@ -379,7 +377,7 @@ else
             var ruta = $"{urlBaseApi}/id/{EntregableActual.Id}";
 
             // Se envía un diccionario con los campos a actualizar
-            // ERROR CORREGIDO: Faltaba la coma después de Descripcion
+
             var datos = new Dictionary<string, object?>
             {
                 { "Codigo", EntregableActual.Codigo},
@@ -391,8 +389,6 @@ else
                 { "FechaFinalizacion", EntregableActual.FechaFinalizacion},
             };
 
-            // NOTA: Si la API requiere el objeto completo, se usaría:
-            // var respuesta = await cliente.PutAsJsonAsync(ruta, EntregableActual); // Cambié TipoProductoActual a EntregableActual
 
             var respuesta = await cliente.PutAsJsonAsync(ruta, datos);
 
@@ -529,7 +525,6 @@ else
     {
         LimpiarMensajes();
 
-        // 1. La Fecha Fin Prevista DEBE ser mayor a la Fecha Inicio
         if (EntregableActual.FechaFinPrevista <= EntregableActual.FechaInicio)
         {
             mensaje = "La fecha de fin prevista debe ser posterior a la fecha de inicio del proyecto.";
@@ -537,10 +532,10 @@ else
             return false;
         }
 
-        // 2. Si la Fecha Finalización ha sido colocada (no es null)
+
         if (EntregableActual.FechaFinalizacion.HasValue)
         {
-            // La Fecha Finalización DEBE ser mayor a la Fecha Inicio
+
             if (EntregableActual.FechaFinalizacion.Value <= EntregableActual.FechaInicio)
             {
                 mensaje = "La fecha de finalización debe ser posterior a la fecha de inicio del proyecto.";
@@ -553,12 +548,12 @@ else
             {
                 mensaje = "Advertencia: La finalización es anterior a la fecha prevista.";
                 claseAviso = "alert alert-info";
-                // return false; // Depende de si quiere solo advertir o bloquear
+                
             }
             
         }
 
-        return true; // La validación es exitosa
+        return true;
     }
 
 

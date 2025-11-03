@@ -137,8 +137,9 @@ else
     {
         try
         {
-            var cliente = fabricaHttp.CreateClient("ApiProyecto_Producto");
+            var cliente = fabricaHttp.CreateClient("ApiProyecto");
             var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<Proyecto>>>(urlProyecto);
+            
             listaProyecto = respuesta?.Datos ?? [];
         }
         catch (Exception ex)
@@ -151,7 +152,7 @@ else
     {
         try
         {
-            var cliente = fabricaHttp.CreateClient("ApiProyecto_Producto");
+            var cliente = fabricaHttp.CreateClient("ApiProducto");
             var respuesta = await cliente.GetFromJsonAsync<RespuestaApi<List<Producto>>>(urlProducto);
             listaProducto = respuesta?.Datos ?? [];
         }

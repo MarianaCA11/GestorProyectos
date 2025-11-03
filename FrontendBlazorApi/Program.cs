@@ -110,6 +110,53 @@ builder.Services.AddRazorComponents()
     cliente.BaseAddress = new Uri("http://localhost:5031/"); 
 });
 
+ builder.Services.AddHttpClient("ApiArchivo_Entregable", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiActividad", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiPresupuesto", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiDistribucionPresupuesto", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiEjecucionPresupuesto", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiObjetivoEstrategico", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiMetaEstrategica", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
+
+ builder.Services.AddHttpClient("ApiMeta_Proyecto", cliente =>
+{
+    // Usa la misma URL base de tu API de Backend donde se ejecutan tus controladores
+    cliente.BaseAddress = new Uri("http://localhost:5031/"); 
+});
 /*
  // Política CORS opcional. Útil solo si el navegador llamara
  // directamente a la API externa. Para Blazor Server no es necesario

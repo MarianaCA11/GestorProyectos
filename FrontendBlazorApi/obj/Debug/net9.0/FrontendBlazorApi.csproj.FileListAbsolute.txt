@@ -76,6 +76,13 @@ C:\Users\Lenovo\Desktop\NuevaCarpeta\FrontendBlazorApi\obj\Debug\net9.0\refint\F
 C:\Users\Lenovo\Desktop\NuevaCarpeta\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.pdb
 C:\Users\Lenovo\Desktop\NuevaCarpeta\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.genruntimeconfig.cache
 C:\Users\Lenovo\Desktop\NuevaCarpeta\FrontendBlazorApi\obj\Debug\net9.0\ref\FrontendBlazorApi.dll
+C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.AssemblyInfoInputs.cache
+C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.AssemblyInfo.cs
+C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.csproj.CoreCompileInputs.cache
+C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.sourcelink.json
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\bin\Debug\net9.0\appsettings.json
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\bin\Debug\net9.0\FrontendBlazorApi.staticwebassets.runtime.json
@@ -85,13 +92,6 @@ C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\bin\Debug\net9.0\FrontendB
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\bin\Debug\net9.0\FrontendBlazorApi.runtimeconfig.json
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\bin\Debug\net9.0\FrontendBlazorApi.dll
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\bin\Debug\net9.0\FrontendBlazorApi.pdb
-C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\rpswa.dswa.cache.json
-C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.AssemblyInfoInputs.cache
-C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.AssemblyInfo.cs
-C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.csproj.CoreCompileInputs.cache
-C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.sourcelink.json
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\rjimswa.dswa.cache.json
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
@@ -99,7 +99,6 @@ C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\scopedcss
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\scopedcss\Components\Layout\NavMenu.razor.rz.scp.css
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\scopedcss\bundle\FrontendBlazorApi.styles.css
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\scopedcss\projectbundle\FrontendBlazorApi.bundle.scp.css
-C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\compressed\hejoe847o0-zxiz86ws8d.gz
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\compressed\o6vx0hwsy2-bqjiyaj88i.gz
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\compressed\vz9d7oo9iw-c2jlpeoesf.gz
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\compressed\6tdo67gsae-erw9l3u2r3.gz
@@ -155,3 +154,4 @@ C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\refint\Fr
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.pdb
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\FrontendBlazorApi.genruntimeconfig.cache
 C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\ref\FrontendBlazorApi.dll
+C:\Users\Lenovo\Desktop\ProyectoAPI\FrontendBlazorApi\obj\Debug\net9.0\compressed\hejoe847o0-18mvuhpl1i.gz
